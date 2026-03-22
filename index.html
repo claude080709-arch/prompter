@@ -91,30 +91,6 @@
     }
     .logo span { color: var(--accent); }
 
-    .api-btn {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 14px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-family: var(--font-body);
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .api-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .api-btn.connected { border-color: rgba(0,217,126,0.35); color: var(--green); }
-
-    .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--danger);
-      flex-shrink: 0;
-    }
-    .api-btn.connected .status-dot { background: var(--green); }
 
     main { flex: 1; padding: 52px 0 80px; }
 
@@ -125,52 +101,6 @@
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(8,12,20,0.88);
-      backdrop-filter: blur(10px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      animation: fadeIn 0.2s ease;
-    }
-    .modal-overlay.hidden { display: none; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .modal {
-      background: var(--bg2);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 18px;
-      padding: 32px;
-      max-width: 440px;
-      width: 100%;
-      animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(18px); opacity: 0; }
-      to   { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 21px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .modal-desc {
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-bottom: 22px;
-      line-height: 1.65;
-    }
-    .modal-desc a { color: var(--accent2); text-decoration: none; }
-    .modal-desc a:hover { text-decoration: underline; }
 
     .input-wrap { position: relative; margin-bottom: 12px; }
 
@@ -193,22 +123,6 @@
     input[type="password"]:focus,
     textarea:focus { border-color: rgba(255,184,48,0.45); }
     ::placeholder { color: var(--text-muted); }
-
-    .toggle-vis {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 4px;
-      transition: color 0.2s;
-    }
-    .toggle-vis:hover { color: var(--text); }
 
     /* Buttons */
     .btn {
@@ -595,7 +509,6 @@
     @media (max-width: 480px) {
       header { padding: 16px 0; }
       main { padding: 36px 0 80px; }
-      .modal { padding: 24px 20px; }
       .result-actions { flex-direction: column; }
     }
 
@@ -606,37 +519,11 @@
 </head>
 <body>
 
-<div class="modal-overlay hidden" id="apiModal">
-  <div class="modal">
-    <div class="modal-title">Groq API 키 설정</div>
-    <p class="modal-desc">
-      API 키는 브라우저 창에 임시 저장돼요. 창을 닫으면 자동 삭제됩니다.<br><br>
-      키가 없으신가요? <a href="https://console.groq.com/keys" target="_blank">groq.com에서 무료 발급 →</a>
-    </p>
-    <div class="err" id="apiErr"></div>
-    <div class="input-wrap">
-      <input type="password" id="apiKeyInput" placeholder="gsk_..." />
-      <button class="toggle-vis" onclick="toggleKeyVis()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
-    </div>
-    <button class="btn btn-primary" onclick="saveApiKey()">저장하기</button>
-    <button class="btn btn-ghost" id="cancelBtn" onclick="closeModal()">취소</button>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <div class="app">
   <header>
-    <div class="logo">Prompt<span>er</span></div><!-- 수정됨: ExpertFlow → Prompter -->
-    <button class="api-btn" id="apiBtn" onclick="openModal()">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="apiLabel">API 키 없음</span>
-    </button>
+    <div class="logo">Prompt<span>er</span></div>
   </header>
 
   <main>
@@ -780,8 +667,6 @@
 <script>
   'use strict';
 
-  const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-  const MODEL    = 'llama-3.3-70b-versatile';
 
   let allExperts   = [];
   let selectedIdxs = [];
@@ -794,41 +679,6 @@
   function cancelLoading() {
     if (currentAbort) { currentAbort.abort(); currentAbort = null; }
     showScreen(allExperts.length ? 'screenExperts' : 'screenInput');
-  }
-
-  // API Key
-  const getKey = () => sessionStorage.getItem('groq_api_key') || '';
-
-  function updateApiUI() {
-    const key = getKey();
-    const btn = document.getElementById('apiBtn');
-    btn.classList.toggle('connected', !!key);
-    document.getElementById('statusDot').style.background = key ? 'var(--green)' : 'var(--danger)';
-    document.getElementById('apiLabel').textContent = key ? 'API 키 연결됨' : 'API 키 없음';
-  }
-
-  function openModal() {
-    document.getElementById('apiModal').classList.remove('hidden');
-    document.getElementById('apiKeyInput').value = getKey();
-    document.getElementById('cancelBtn').style.display = getKey() ? 'inline-flex' : 'none';
-    document.getElementById('apiErr').classList.remove('show');
-  }
-
-  function closeModal() { document.getElementById('apiModal').classList.add('hidden'); }
-
-  function saveApiKey() {
-    const val = document.getElementById('apiKeyInput').value.trim();
-    const err = document.getElementById('apiErr');
-    if (!val)                  { err.textContent = 'API 키를 입력해주세요.'; err.classList.add('show'); return; }
-    if (!val.startsWith('gsk_')) { err.textContent = 'Groq API 키는 gsk_ 로 시작해야 해요.'; err.classList.add('show'); return; }
-    sessionStorage.setItem('groq_api_key', val);
-    closeModal();
-    updateApiUI();
-  }
-
-  function toggleKeyVis() {
-    const i = document.getElementById('apiKeyInput');
-    i.type = i.type === 'password' ? 'text' : 'password';
   }
 
   // Input
@@ -847,10 +697,10 @@
     currentAbort = new AbortController();
     const timeout = setTimeout(() => currentAbort.abort(), 15000); // 15초 타임아웃
     try {
-      const res = await fetch(GROQ_URL, {
+      const res = await fetch('/api/groq', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${getKey()}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: MODEL, messages, max_tokens: maxTokens, temperature: temp }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, max_tokens: maxTokens, temperature: temp }),
         signal: currentAbort.signal
       });
       if (!res.ok) {
@@ -908,7 +758,6 @@ Rules:
     err.classList.remove('show');
 
     if (!goal) { err.textContent = '하고 싶은 것을 먼저 입력해주세요.'; err.classList.add('show'); return; }
-    if (!getKey()) { err.textContent = '먼저 상단 API 키 버튼을 눌러 키를 설정해주세요.'; err.classList.add('show'); openModal(); return; }
     isFinding = true;
 
     currentGoal = goal;
@@ -1028,8 +877,6 @@ ${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelec
   // Generate Prompt
   async function generatePrompt() {
     if (!selectedIdxs.length) return;
-    // 수정됨: generatePrompt에 API 키 체크 추가
-    if (!getKey()) { openModal(); return; }
     const chosen = selectedIdxs.map(i => allExperts[i]);
 
     showScreen('screenResult');
@@ -1130,11 +977,7 @@ ${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelec
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   // Init
-  updateApiUI();
-  if (!getKey()) setTimeout(openModal, 350);
-
   document.getElementById('goalInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); findExperts(); } });
-  document.getElementById('apiModal').addEventListener('click', e => { if (e.target === e.currentTarget && getKey()) closeModal(); });
 </script>
 </body>
 </html>
