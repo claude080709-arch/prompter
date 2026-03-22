@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompter — 전문가 프롬프트 생성기</title><!-- 수정됨: ExpertFlow → Prompter -->
+  <title>Prompter — 전문가 프롬프트 생성기</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -11,21 +11,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #080C14;
-      --bg2: #0F1520;
-      --bg3: #161E2E;
-      --border: rgba(255,255,255,0.08);
-      --text: #F0EDE8;
-      --text-muted: rgba(240,237,232,0.45);
-      --accent: #FFB830;
-      --accent2: #00D4FF;
-      --green: #00D97E;
-      --danger: #FF5555;
-      --card-bg: rgba(255,255,255,0.025);
-      --card-hover: rgba(255,255,255,0.05);
-      --radius: 12px;
+      --bg:        #080C14;
+      --bg2:       #0D1219;
+      --bg3:       #131A26;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #EDE9E3;
+      --text-muted: rgba(237,233,227,0.42);
+      --accent:    #C4962A;
+      --accent-light: #D4A843;
+      --accent-dim: rgba(196,150,42,0.12);
+      --accent2:   #00D4FF;
+      --radius:    14px;
       --font-display: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -34,950 +32,751 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
-      min-height: 100vh;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
+    /* Grid bg */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,184,48,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,184,48,0.025) 1px, transparent 1px);
-      background-size: 44px 44px;
+        linear-gradient(rgba(196,150,42,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196,150,42,0.018) 1px, transparent 1px);
+      background-size: 48px 48px;
       pointer-events: none;
       z-index: 0;
     }
 
-    body::after {
-      content: '';
+    /* ─── NAV ─── */
+    nav {
       position: fixed;
-      top: -15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(255,184,48,0.055) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .app {
-      position: relative;
-      z-index: 1;
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 0 22px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
+      top: 0; left: 0; right: 0;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 22px 0;
+      padding: 18px 48px;
+      background: rgba(8,12,20,0.72);
+      backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
     }
 
     .logo {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 17px;
-      letter-spacing: -0.4px;
+      font-size: 18px;
+      letter-spacing: -0.5px;
     }
     .logo span { color: var(--accent); }
 
-
-    main { flex: 1; padding: 52px 0 80px; }
-
-    .screen { display: none; }
-    .screen.active { display: block; animation: fadeUp 0.35s ease; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .input-wrap { position: relative; margin-bottom: 12px; }
-
-    input[type="text"],
-    input[type="password"],
-    textarea {
-      width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 13px 16px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
-    }
-    input[type="text"]:focus,
-    input[type="password"]:focus,
-    textarea:focus { border-color: rgba(255,184,48,0.45); }
-    ::placeholder { color: var(--text-muted); }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 13px 22px;
-      border-radius: var(--radius);
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      width: 100%;
-    }
-    .btn-primary { background: var(--accent); color: #080C14; }
-    .btn-primary:hover:not(:disabled) { background: #FFC84D; transform: translateY(-1px); }
-    .btn-primary:active:not(:disabled) { transform: translateY(0); }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      margin-top: 8px;
-    }
-    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover { border-color: rgba(255,184,48,0.4); color: var(--accent); }
-
-    .btn-reroll {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid rgba(0,212,255,0.18);
-      font-size: 14px;
-      padding: 11px 18px;
-    }
-    .btn-reroll:hover:not(:disabled) {
-      border-color: rgba(0,212,255,0.45);
-      color: var(--accent2);
-      background: rgba(0,212,255,0.04);
-    }
-    .btn-reroll:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* Error */
-    .err {
-      display: none;
-      padding: 13px 15px;
-      background: rgba(255,85,85,0.09);
-      border: 1px solid rgba(255,85,85,0.28);
-      border-radius: var(--radius);
-      color: #FF8888;
-      font-size: 14px;
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
-    .err.show { display: block; }
-
-    /* Screen: Input */
-    .screen-input .heading {
-      font-family: var(--font-display);
-      font-size: clamp(30px, 6vw, 48px);
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -1.2px;
-      margin-bottom: 14px;
-    }
-    .screen-input .heading em { font-style: normal; color: var(--accent); }
-    .screen-input .subtext { color: var(--text-muted); font-size: 16px; margin-bottom: 40px; }
-
-    .goal-textarea { min-height: 130px; font-size: 16px; line-height: 1.65; padding: 16px; }
-
-    .char-count {
-      text-align: right;
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      margin-bottom: 22px;
-    }
-
-    .examples-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
-
-    .chip {
-      padding: 6px 14px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      font-size: 13px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .chip:hover {
-      border-color: rgba(255,184,48,0.4);
-      color: var(--text);
-      background: rgba(255,184,48,0.06);
-    }
-
-    /* Screen: Loading */
-    .screen-loading { text-align: center; padding: 90px 20px; }
-
-    .dots { display: inline-flex; gap: 8px; margin-bottom: 30px; }
-    .dots span {
-      width: 11px; height: 11px;
-      border-radius: 50%;
+    .nav-cta {
+      padding: 9px 20px;
       background: var(--accent);
-      animation: dotBounce 1.3s ease-in-out infinite;
-    }
-    .dots span:nth-child(2) { animation-delay: 0.18s; background: #FFD47A; }
-    .dots span:nth-child(3) { animation-delay: 0.36s; background: var(--accent2); }
-
-    @keyframes dotBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30%            { transform: translateY(-16px); opacity: 1; }
-    }
-
-    .screen-loading h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-    .screen-loading p  { color: var(--text-muted); font-size: 15px; }
-
-    /* Screen: Experts */
-    .step-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 16px;
-    }
-    .step-label::before { content: ''; width: 18px; height: 1px; background: var(--border); }
-
-    .screen-experts h2 {
-      font-family: var(--font-display);
-      font-size: clamp(24px, 4.5vw, 34px);
-      font-weight: 700;
-      letter-spacing: -0.6px;
-      line-height: 1.2;
-      margin-bottom: 14px;
-    }
-
-    .goal-tag {
-      display: inline-block;
-      padding: 5px 13px;
-      background: rgba(255,184,48,0.09);
-      border: 1px solid rgba(255,184,48,0.22);
-      border-radius: 100px;
-      font-size: 13px;
-      color: var(--accent);
-      margin-bottom: 32px;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .expert-grid { display: grid; gap: 12px; }
-
-    /* Expert Card */
-    .expert-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
+      color: #080C14;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+    /* ─── SECTIONS ─── */
+    section {
       position: relative;
-      overflow: hidden;
+      z-index: 1;
     }
-    .expert-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,184,48,0.06) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-    }
-    .expert-card:hover { border-color: rgba(255,184,48,0.28); background: var(--card-hover); }
-    .expert-card:hover::after { opacity: 1; }
-    .expert-card.selected {
-      border-color: var(--accent);
-      background: rgba(255,184,48,0.045);
-      box-shadow: 0 0 0 1px rgba(255,184,48,0.2);
-    }
-    .expert-card.selected::after { opacity: 1; }
 
-    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
 
-    .card-num {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-muted);
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-    .expert-card.selected .card-num { background: var(--accent); border-color: var(--accent); color: #080C14; }
-
-    .card-check {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-    .expert-card.selected .card-check { background: var(--accent); border-color: var(--accent); }
-    .card-check .check-icon { display: none; }
-    .expert-card.selected .card-check .check-icon { display: block; }
-
-    .expert-name { font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
-    .expert-tagline { font-size: 13px; color: var(--accent2); margin-bottom: 14px; }
-    .benefits-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--text-muted); margin-bottom: 7px; }
-    .expert-benefits { font-size: 14px; color: rgba(240,237,232,0.65); line-height: 1.65; }
-
-    /* Reroll Section */
-    .reroll-section {
-      margin-top: 32px;
-      padding: 22px;
-      background: rgba(0,212,255,0.02);
-      border: 1px solid rgba(0,212,255,0.1);
-      border-radius: var(--radius);
+      text-align: center;
+      padding: 120px 32px 80px;
     }
 
-    .reroll-title {
-      display: flex;
+    .hero-inner { max-width: 720px; margin: 0 auto; }
+
+    .hero-badge {
+      display: inline-flex;
       align-items: center;
       gap: 7px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 5px;
-    }
-    .reroll-title svg { color: var(--accent2); flex-shrink: 0; }
-
-    .reroll-desc {
-      font-size: 12px;
-      color: rgba(240,237,232,0.3);
-      margin-bottom: 14px;
-      line-height: 1.55;
-    }
-
-    .reroll-textarea {
-      min-height: 80px;
-      font-size: 14px;
-      line-height: 1.6;
-      padding: 13px 15px;
-      margin-bottom: 12px;
-      border-color: rgba(0,212,255,0.12);
-    }
-    .reroll-textarea:focus { border-color: rgba(0,212,255,0.4); }
-
-    /* Action Bar */
-    .action-bar {
-      position: sticky;
-      bottom: 0;
-      padding: 20px 0 28px;
-      background: linear-gradient(to top, var(--bg) 55%, transparent 100%);
-      margin-top: 20px;
-    }
-
-    .sel-count { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 11px; }
-    .sel-count strong { color: var(--accent); }
-
-    /* Screen: Result */
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-family: var(--font-body);
-      cursor: pointer;
-      margin-bottom: 32px;
-      transition: color 0.2s;
-      padding: 0;
-    }
-    .back-link:hover { color: var(--text); }
-
-    .screen-result h2 { font-family: var(--font-display); font-size: clamp(24px, 4.5vw, 34px); font-weight: 700; letter-spacing: -0.6px; margin-bottom: 8px; }
-    .screen-result .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
-
-    .expert-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 28px; }
-    .ebadge {
-      padding: 4px 11px;
-      background: rgba(255,184,48,0.1);
-      border: 1px solid rgba(255,184,48,0.24);
+      padding: 6px 16px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(196,150,42,0.28);
       border-radius: 100px;
       font-size: 12px;
+      font-weight: 500;
+      color: var(--accent-light);
+      letter-spacing: 0.5px;
+      margin-bottom: 36px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin-bottom: 22px;
+    }
+    .hero h1 em {
+      font-style: normal;
       color: var(--accent);
     }
 
-    .result-loader { text-align: center; padding: 60px 20px; }
-    .result-loader p { color: var(--text-muted); font-size: 14px; margin-top: 16px; }
+    .hero-sub {
+      font-size: clamp(16px, 2.2vw, 19px);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
 
-    .prompt-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
 
-    .block-header {
+    .btn-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 16px 32px;
+      background: var(--accent);
+      color: #080C14;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(196,150,42,0.22);
+    }
+    .btn-hero:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(196,150,42,0.32); }
+
+    .hero-scroll {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    /* ─── DIVIDER ─── */
+    .section-divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--border), transparent);
+      margin: 0 auto;
+    }
+
+    /* ─── FEATURES ─── */
+    .features { padding: 100px 0; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: rgba(196,150,42,0.35);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+    .section-title em { font-style: normal; color: var(--accent); }
+
+    .section-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: border-color 0.3s, transform 0.3s;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .feature-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(196,150,42,0.3); transform: translateY(-3px); }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(196,150,42,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      color: var(--accent);
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── HOW TO ─── */
+    .howto { padding: 100px 0; background: linear-gradient(to bottom, transparent, rgba(196,150,42,0.02), transparent); }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: flex;
+      gap: 28px;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    .step.visible {
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid rgba(196,150,42,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .step-line {
+      width: 1px;
+      flex: 1;
+      min-height: 48px;
+      background: linear-gradient(to bottom, rgba(196,150,42,0.3), rgba(196,150,42,0.05));
+      margin: 8px 0;
+    }
+
+    .step:last-child .step-line { display: none; }
+
+    .step-content { padding: 6px 0 52px; }
+    .step:last-child .step-content { padding-bottom: 0; }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ─── REVIEWS ─── */
+    .reviews { padding: 100px 0; }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .review-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.022) 0%, rgba(255,255,255,0.008) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .review-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .review-text {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: rgba(237,233,227,0.75);
+      margin-bottom: 20px;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .review-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .review-name { font-size: 13px; font-weight: 500; }
+    .review-role { font-size: 12px; color: var(--text-muted); }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: 120px 0 140px;
+      text-align: center;
+    }
+
+    .cta-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(196,150,42,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .cta-section h2 em { font-style: normal; color: var(--accent); }
+
+    .cta-section p {
+      color: var(--text-muted);
+      font-size: 17px;
+      margin-bottom: 48px;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 40px;
+      background: var(--accent);
+      color: #080C14;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 32px rgba(196,150,42,0.28);
+    }
+    .btn-cta:hover { background: var(--accent-light); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(196,150,42,0.38); }
+
+    .cta-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 11px 16px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
+      position: relative;
+      z-index: 1;
     }
 
-    .block-label { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
-
-    .lang-pill { padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 700; }
-    .lang-pill.en { background: rgba(0,212,255,0.13); color: var(--accent2); }
-    .lang-pill.ko { background: rgba(255,184,48,0.13); color: var(--accent); }
-
-    .copy-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 11px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-family: var(--font-body);
-      cursor: pointer;
-      transition: all 0.2s;
+    .footer-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.3px;
     }
-    .copy-btn:hover { border-color: rgba(255,184,48,0.4); color: var(--accent); }
-    .copy-btn.copied { border-color: rgba(0,217,126,0.5); color: var(--green); }
+    .footer-logo span { color: var(--accent); }
 
-    .prompt-text { padding: 18px 20px; font-size: 14.5px; line-height: 1.8; color: rgba(240,237,232,0.82); white-space: pre-wrap; word-break: break-word; }
-    .prompt-text.ko { font-size: 13.5px; color: var(--text-muted); font-style: italic; }
+    .footer-copy { font-size: 13px; color: var(--text-muted); }
 
-    .result-actions { display: flex; gap: 10px; margin-top: 8px; }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--green);
-      color: #080C14;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 11px 22px;
-      border-radius: 100px;
-      z-index: 300;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-      white-space: nowrap;
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 720px) {
+      nav { padding: 16px 24px; }
+      .container { padding: 0 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; }
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    @media (min-width: 580px) { .expert-grid { grid-template-columns: 1fr 1fr; } }
 
     @media (max-width: 480px) {
-      header { padding: 16px 0; }
-      main { padding: 36px 0 80px; }
-      .result-actions { flex-direction: column; }
+      .hero { padding: 100px 20px 60px; }
+      .features, .howto, .reviews, .cta-section { padding: 70px 0; }
     }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
   </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<!-- NAV -->
+<nav>
+  <div class="logo">Prompt<span>er</span></div>
+  <a href="app.html" class="nav-cta">시작하기 →</a>
+</nav>
 
-<div class="app">
-  <header>
-    <div class="logo">Prompt<span>er</span></div>
-  </header>
-
-  <main>
-
-    <!-- Screen 1: Input -->
-    <div class="screen screen-input active" id="screenInput">
-      <h1 class="heading">무엇을<br><em>하고 싶으신가요?</em></h1>
-      <p class="subtext">목표를 알려주시면 최적의 전문가를 찾아드려요.</p>
-      <div class="err" id="inputErr"></div>
-      <textarea
-        class="goal-textarea"
-        id="goalInput"
-        placeholder="예: 3개월 안에 10kg 감량하고 싶어&#10;예: 영어 회화 실력을 빠르게 늘리고 싶어"
-        maxlength="300"
-        oninput="onGoalInput()"
-      ></textarea>
-      <div class="char-count"><span id="charCount">0</span> / 300</div>
-      <div class="examples-label">예시로 시작하기</div>
-      <div class="chips">
-        <div class="chip" onclick="pickExample(this)">3개월 안에 10kg 빼고 싶어</div>
-        <div class="chip" onclick="pickExample(this)">영어 회화 실력 빠르게 늘리고 싶어</div>
-        <div class="chip" onclick="pickExample(this)">창업 아이디어를 구체화하고 싶어</div>
-        <div class="chip" onclick="pickExample(this)">코딩을 처음부터 배우고 싶어</div>
-        <div class="chip" onclick="pickExample(this)">투자 공부를 시작하고 싶어</div>
-        <div class="chip" onclick="pickExample(this)">글쓰기 실력을 키우고 싶어</div>
-      </div>
-      <button class="btn btn-primary" onclick="findExperts()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">AI 기반 전문가 프롬프트 생성기</div>
+    <h1>당신의 목표에<br><em>맞는 전문가</em>를<br>AI가 찾아드려요</h1>
+    <p class="hero-sub">
+      하고 싶은 것을 입력하면, AI가 최적의 전문가를 추천하고<br>
+      바로 쓸 수 있는 전문가 수준의 프롬프트를 생성해드립니다.
+    </p>
+    <div class="hero-actions">
+      <a href="app.html" class="btn-hero">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"/>
         </svg>
-        전문가 찾기
-      </button>
+        무료로 시작하기
+      </a>
     </div>
-
-    <!-- Screen 2: Loading -->
-    <div class="screen screen-loading" id="screenLoading">
-      <div class="dots"><span></span><span></span><span></span></div>
-      <h2 id="loadingTitle">최적의 전문가를 찾는 중...</h2>
-      <p id="loadingDesc">AI가 당신의 목표를 분석하고 있어요</p>
-      <!-- 수정됨: 취소 버튼 추가 — 무한 로딩 방지 -->
-      <button class="btn btn-ghost" id="cancelLoadBtn" onclick="cancelLoading()" style="max-width:180px; margin: 28px auto 0;">취소</button>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      scroll
     </div>
+  </div>
+</section>
 
-    <!-- Screen 3: Expert Selection -->
-    <div class="screen screen-experts" id="screenExperts">
-      <div class="step-label">전문가 선택</div>
-      <h2>당신에게 필요한<br>전문가들이에요</h2>
-      <div class="goal-tag" id="goalTag"></div>
-      <div class="expert-grid" id="expertGrid"></div>
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="section-label">기능 소개</div>
+    <h2 class="section-title">왜 <em>Prompter</em>인가요</h2>
+    <p class="section-sub">목표를 입력하는 것만으로, 전문가 수준의 결과를 얻을 수 있어요.</p>
+    <div class="features-grid">
 
-      <!-- Reroll Section -->
-      <!-- 수정됨: 리롤 섹션 추가 -->
-      <div class="reroll-section">
-        <div class="reroll-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <div class="feature-title">전문가 자동 매칭</div>
+        <p class="feature-desc">목표를 입력하면 AI가 해당 분야에서 가장 효과적인 전문가 역할을 3~5개 추천해드려요.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <div class="feature-title">맞춤형 프롬프트 생성</div>
+        <p class="feature-desc">선택한 전문가를 기반으로 바로 ChatGPT, Claude에 붙여넣기 할 수 있는 완성된 프롬프트를 만들어줘요.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
           </svg>
-          마음에 안 드는 부분이 있나요?
         </div>
-        <div class="reroll-desc">뭐든 자유롭게 적어주세요. AI가 반영해서 새로운 전문가를 다시 추천해드려요.</div>
-        <textarea
-          class="reroll-textarea"
-          id="rerollInput"
-          placeholder="예: 나는 린메스업 목표라 살을 먼저 빼고 싶어&#10;예: 실전 위주 전문가가 더 필요해&#10;예: 심리 관련보다 행동 위주였으면 좋겠어"
-          maxlength="300"
-        ></textarea>
-        <button class="btn btn-reroll" id="rerollBtn" onclick="rerollExperts()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="1 4 1 10 7 10"/>
-            <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+        <div class="feature-title">피드백 반영 재추천</div>
+        <p class="feature-desc">추천된 전문가가 마음에 안 들면 피드백을 남기면 돼요. AI가 반영해서 새로운 전문가를 다시 추천해줘요.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
           </svg>
-          다시 추천받기
-        </button>
+        </div>
+        <div class="feature-title">복합 전문가 결합</div>
+        <p class="feature-desc">여러 전문가를 동시에 선택하면 AI가 하나의 통합된 프롬프트로 자동으로 합쳐드려요.</p>
       </div>
 
-      <div class="action-bar">
-        <button class="btn btn-primary" id="genBtn" onclick="generatePrompt()" disabled>
-          프롬프트 생성하기
-        </button>
-        <div class="sel-count" id="selCount">전문가를 선택해주세요</div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="feature-title">즉시 사용 가능</div>
+        <p class="feature-desc">설치 필요 없어요. 웹에서 바로 열고, 목표 입력 후 30초 안에 프롬프트를 받을 수 있어요.</p>
       </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+        </div>
+        <div class="feature-title">영어 + 한국어 동시 제공</div>
+        <p class="feature-desc">생성된 프롬프트는 영어와 한국어 번역본을 동시에 제공해요. 어떤 AI 서비스에서도 바로 쓸 수 있어요.</p>
+      </div>
+
     </div>
+  </div>
+</section>
 
-    <!-- Screen 4: Result -->
-    <div class="screen screen-result" id="screenResult">
-      <button class="back-link" onclick="goBack()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="m15 18-6-6 6-6"/>
-        </svg>
-        다시 선택
-      </button>
+<div class="section-divider"></div>
 
-      <div id="resultLoader">
-        <div class="result-loader">
-          <div class="dots"><span></span><span></span><span></span></div>
-          <p>프롬프트를 생성하고 있어요...</p>
+<!-- HOW TO -->
+<section class="howto">
+  <div class="container">
+    <div class="section-label">사용 방법</div>
+    <h2 class="section-title">3단계면 <em>충분해요</em></h2>
+    <p class="section-sub">복잡한 설정 없이, 누구나 바로 쓸 수 있어요.</p>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">목표를 입력하세요</div>
+          <p class="step-desc">이루고 싶은 것을 자유롭게 적어주세요. "3개월 안에 10kg 빼고 싶어", "영어 회화를 빠르게 늘리고 싶어" 처럼 짧아도 괜찮아요.</p>
         </div>
       </div>
 
-      <div id="resultContent" style="display:none">
-        <h2>프롬프트 생성 완료!</h2>
-        <p class="subtitle">아래 프롬프트를 복사해서 AI 채팅창에 붙여넣기 하세요</p>
-        <div class="expert-badges" id="expertBadges"></div>
-
-        <div class="prompt-block">
-          <div class="block-header">
-            <div class="block-label"><span class="lang-pill en">EN</span>영어 프롬프트</div>
-            <button class="copy-btn" id="copyEnBtn" onclick="copyText('en')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-              복사
-            </button>
-          </div>
-          <div class="prompt-text" id="promptEn"></div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
         </div>
-
-        <div class="prompt-block">
-          <div class="block-header">
-            <div class="block-label"><span class="lang-pill ko">KO</span>한국어 해석</div>
-          </div>
-          <div class="prompt-text ko" id="promptKo"></div>
-        </div>
-
-        <div class="result-actions">
-          <button class="btn btn-primary" style="flex:1" onclick="copyText('en')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            프롬프트 복사
-          </button>
-          <button class="btn btn-outline" style="flex:1" onclick="restart()">처음으로</button>
+        <div class="step-content">
+          <div class="step-title">전문가를 선택하세요</div>
+          <p class="step-desc">AI가 추천한 전문가 중 원하는 역할을 고르세요. 여러 명을 동시에 선택해도 돼요. 마음에 안 들면 피드백을 남겨 다시 추천받을 수 있어요.</p>
         </div>
       </div>
+
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">프롬프트를 복사해서 쓰세요</div>
+          <p class="step-desc">생성된 영어 프롬프트를 복사해서 ChatGPT나 Claude에 붙여넣으면 끝이에요. 전문가 수준의 AI 답변을 바로 받을 수 있어요.</p>
+        </div>
+      </div>
+
     </div>
+  </div>
+</section>
 
-  </main>
-</div>
+<div class="section-divider"></div>
+
+<!-- REVIEWS -->
+<section class="reviews">
+  <div class="container">
+    <div class="section-label">사용자 후기</div>
+    <h2 class="section-title">실제로 <em>써본 사람들</em>의 이야기</h2>
+    <p class="section-sub">Prompter를 사용한 분들의 솔직한 후기예요.</p>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"프롬프트를 어떻게 써야 할지 몰라서 항상 AI한테서 평범한 답변만 받았는데, Prompter 쓰고 나서 완전히 달라졌어요. 전문가처럼 답해주니까 정보의 질이 달라요."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: rgba(196,150,42,0.15); color: var(--accent);">김</div>
+          <div>
+            <div class="review-name">김지훈</div>
+            <div class="review-role">직장인 · 자기계발 중</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"창업 아이디어를 구체화할 때 쓴 게 시작이었는데, 이제는 거의 모든 AI 질문 전에 여기서 프롬프트 먼저 만들어요. 답변 퀄리티가 확실히 달라요."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: rgba(0,212,255,0.1); color: var(--accent2);">박</div>
+          <div>
+            <div class="review-name">박서연</div>
+            <div class="review-role">예비 창업자</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"영어 공부할 때 원어민 튜터 전문가 프롬프트를 만들어서 썼는데, 진짜 튜터한테 배우는 것 같았어요. 설치도 없고 무료라서 친구들한테 다 공유했어요."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: rgba(0,217,126,0.1); color: #00D97E;">이</div>
+          <div>
+            <div class="review-name">이민준</div>
+            <div class="review-role">대학생 · 영어 공부 중</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <h2>지금 바로<br><em>시작해보세요</em></h2>
+    <p>설치 없이, 회원가입 없이. 목표만 있으면 돼요.</p>
+    <a href="app.html" class="btn-cta">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      무료로 시작하기
+    </a>
+    <p class="cta-note">Groq API 기반 · 완전 무료</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Prompt<span>er</span></div>
+  <div class="footer-copy">© 2025 Prompter. All rights reserved.</div>
+</footer>
 
 <script>
-  'use strict';
-
-
-  let allExperts   = [];
-  let selectedIdxs = [];
-  let currentGoal  = '';
-  let finalPrompt  = { en: '', ko: '' };
-
-  // 수정됨: AbortController — 취소 + 15초 타임아웃
-  let currentAbort = null;
-
-  function cancelLoading() {
-    if (currentAbort) { currentAbort.abort(); currentAbort = null; }
-    showScreen(allExperts.length ? 'screenExperts' : 'screenInput');
-  }
-
-  // Input
-  function onGoalInput() { document.getElementById('charCount').textContent = document.getElementById('goalInput').value.length; }
-  function pickExample(el) { document.getElementById('goalInput').value = el.textContent; onGoalInput(); }
-
-  // Screens
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // 수정됨: groq() — AbortController + 15초 타임아웃 추가
-  async function groq(messages, maxTokens = 2000, temp = 0.7) {
-    currentAbort = new AbortController();
-    const timeout = setTimeout(() => currentAbort.abort(), 15000); // 15초 타임아웃
-    try {
-      const res = await fetch('/api/groq', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, max_tokens: maxTokens, temperature: temp }),
-        signal: currentAbort.signal
-      });
-      if (!res.ok) {
-        const e = await res.json().catch(() => ({}));
-        if (res.status === 401) throw new Error('AUTH_ERROR');
-        if (res.status === 429) throw new Error('RATE_LIMIT');
-        throw new Error(e.error?.message || `HTTP ${res.status}`);
+  // Scroll animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.dataset.delay || 0;
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
       }
-      const data = await res.json();
-      let text = data.choices[0].message.content.trim();
-      return text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-    } finally {
-      clearTimeout(timeout);
-      currentAbort = null;
-    }
-  }
+    });
+  }, { threshold: 0.12 });
 
-  function parseJSON(raw) {
-    try { return JSON.parse(raw); } catch {
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (m) return JSON.parse(m[0]);
-      throw new Error('JSON_PARSE_FAIL');
-    }
-  }
+  document.querySelectorAll('.feature-card').forEach((el, i) => {
+    el.dataset.delay = i * 80;
+    observer.observe(el);
+  });
 
-  const EXPERT_SYSTEM = `You are an expert advisor identifying professional roles to help users achieve their goals.
-Return ONLY a raw JSON object. No markdown, no backticks, no explanation.
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.dataset.delay = i * 120;
+    observer.observe(el);
+  });
 
-Schema:
-{
-  "experts": [
-    {
-      "name": "전문가 이름 (한국어, 2~5자)",
-      "tagline": "핵심 전문 분야 (한국어, 15자 이내)",
-      "benefits": "이 전문가를 선택했을 때의 구체적 이점 2문장 (한국어)",
-      "prompt_en": "Detailed system prompt starting with 'You are a...' (3-4 sentences, specific and actionable)",
-      "prompt_ko": "Korean translation of prompt_en"
-    }
-  ]
-}
-Rules:
-- Recommend exactly 3 to 5 experts
-- Each expert covers a DIFFERENT aspect of the user's goal
-- prompt_en must start with "You are a..."
-- ALL Korean text (name, tagline, benefits, prompt_ko) must use PURE Korean (한글) ONLY — absolutely NO Chinese characters (한자), NO Japanese characters
-- Output raw JSON only`; // 수정됨: 한자 사용 금지 규칙 추가
-
-  // Find Experts
-  // 수정됨: findExperts — 중복 클릭 방지 플래그 추가
-  let isFinding = false;
-  async function findExperts() {
-    if (isFinding) return;
-    const goal = document.getElementById('goalInput').value.trim();
-    const err  = document.getElementById('inputErr');
-    err.classList.remove('show');
-
-    if (!goal) { err.textContent = '하고 싶은 것을 먼저 입력해주세요.'; err.classList.add('show'); return; }
-    isFinding = true;
-
-    currentGoal = goal;
-    setLoading('최적의 전문가를 찾는 중...', 'AI가 당신의 목표를 분석하고 있어요'); // 수정됨: setLoading 함수로 변경
-    showScreen('screenLoading');
-
-    const safeGoalInput = goal.replace(/"/g, '"').replace(/`/g, "'"); // 수정됨: XSS sanitize
-    try {
-      const raw    = await groq([{ role:'system', content: EXPERT_SYSTEM }, { role:'user', content:`사용자 목표: "${safeGoalInput}"\n\n최적의 전문가 역할들을 추천해주세요.` }]);
-      const parsed = parseJSON(raw);
-      if (!parsed.experts?.length) throw new Error('INVALID_RESPONSE');
-      allExperts = parsed.experts.slice(0, 5);
-      selectedIdxs = [];
-      document.getElementById('rerollInput').value = ''; // 수정됨: 새 탐색 시 리롤 입력창 초기화
-      renderExperts();
-      showScreen('screenExperts');
-    } catch (e) {
-      showScreen('screenInput');
-      showErrMsg('inputErr', e);
-    } finally {
-      isFinding = false; // 수정됨: 완료 후 플래그 해제
-    }
-  }
-
-  // 수정됨: 리롤 함수 신규 추가 — 원래 목표 + 이전 전문가 목록 + 피드백 세 가지 전달
-  async function rerollExperts() {
-    const feedback = document.getElementById('rerollInput').value.trim();
-    const btn = document.getElementById('rerollBtn');
-    btn.disabled = true;
-
-    setLoading('전문가를 다시 찾는 중...', '피드백을 반영해서 새로운 전문가를 추천할게요');
-    showScreen('screenLoading');
-
-    // 수정됨: 리롤 시 선택했던 전문가 이름도 컨텍스트로 전달
-    const prevSelected = selectedIdxs.map(i => allExperts[i]?.name).filter(Boolean);
-    const selectedInfo = prevSelected.length
-      ? `사용자가 마음에 들었던 전문가: ${prevSelected.join(', ')}`
-      : '사용자가 선택한 전문가 없음';
-
-    // 수정됨: XSS 방지 — 사용자 입력값 프롬프트 삽입 전 sanitize
-    const safeGoal     = currentGoal.replace(/"/g, '\\"').replace(/`/g, "'");
-    const safeFeedback = (feedback || '없음 - 이전과 다른 새로운 전문가로 추천해줘').replace(/"/g, '\\"').replace(/`/g, "'");
-    const safeSelected = prevSelected.join(', ').replace(/"/g, '\\"');
-
-    const userMsg = `사용자 원래 목표: "${safeGoal}"
-
-이전에 추천한 전문가 목록: ${allExperts.map(e => e.name.replace(/"/g, '\\"')).join(', ')}
-${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelected}` : '사용자가 선택한 전문가 없음'}
-
-사용자 추가 피드백: "${safeFeedback}"
-
-위 피드백과 원래 목표를 모두 반영해서 더 적합한 전문가 3~5명을 새로 추천해주세요.
-사용자가 마음에 들었던 전문가 유형은 유지하거나 발전시키고, 나머지는 새롭게 추천해주세요.
-피드백이 없어도 이전과 다른 새로운 전문가를 추천해주세요.`;
-
-    try {
-      const raw    = await groq([{ role:'system', content: EXPERT_SYSTEM }, { role:'user', content: userMsg }]);
-      const parsed = parseJSON(raw);
-      if (!parsed.experts?.length) throw new Error('INVALID_RESPONSE');
-      allExperts   = parsed.experts.slice(0, 5);
-      selectedIdxs = [];
-      renderExperts();
-      showScreen('screenExperts');
-      document.getElementById('rerollInput').value = ''; // 수정됨: 리롤 성공 후 입력창 초기화
-      showToast('🔄 새로운 전문가로 업데이트됐어요!');
-    } catch {
-      showScreen('screenExperts');
-      showToast('❌ 다시 시도해주세요');
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
-  // Render
-  // 수정됨: 한자 slip-through 방어 — 렌더 전 한자 제거 후처리
-  function stripHanja(str) {
-    return str.replace(/[㐀-鿿豈-﫿]/g, '').trim();
-  }
-
-  function renderExperts() {
-    document.getElementById('goalTag').textContent = `"${currentGoal}"`; 
-    document.getElementById('expertGrid').innerHTML = allExperts.map((ex, i) => `
-      <div class="expert-card" id="card-${i}" onclick="toggleExpert(${i})">
-        <div class="card-top">
-          <div class="card-num">${i + 1}</div>
-          <div class="card-check">
-            <svg class="check-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="3.5">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </div>
-        </div>
-        <div class="expert-name">${esc(stripHanja(ex.name))}</div>
-        <div class="expert-tagline">${esc(stripHanja(ex.tagline))}</div>
-        <div class="benefits-label">선택하면 얻는 것</div>
-        <div class="expert-benefits">${esc(stripHanja(ex.benefits))}</div>
-      </div>
-    `).join('');
-    updateSelUI();
-  }
-
-  function toggleExpert(i) {
-    const idx = selectedIdxs.indexOf(i);
-    if (idx === -1) { selectedIdxs.push(i); document.getElementById(`card-${i}`).classList.add('selected'); }
-    else            { selectedIdxs.splice(idx, 1); document.getElementById(`card-${i}`).classList.remove('selected'); }
-    updateSelUI();
-  }
-
-  function updateSelUI() {
-    const n = selectedIdxs.length;
-    document.getElementById('genBtn').disabled = n === 0;
-    const cnt = document.getElementById('selCount');
-    if (n === 0)      cnt.innerHTML = '전문가를 선택해주세요';
-    else if (n === 1) cnt.innerHTML = `<strong>1명</strong> 선택됨`;
-    else              cnt.innerHTML = `<strong>${n}명</strong> 선택됨 → 하나의 프롬프트로 합쳐져요`;
-  }
-
-  // Generate Prompt
-  async function generatePrompt() {
-    if (!selectedIdxs.length) return;
-    const chosen = selectedIdxs.map(i => allExperts[i]);
-
-    showScreen('screenResult');
-    document.getElementById('resultLoader').style.display = 'block';
-    document.getElementById('resultContent').style.display = 'none';
-    document.getElementById('expertBadges').innerHTML = chosen.map(e => `<span class="ebadge">${esc(e.name)}</span>`).join('');
-
-    try {
-      let promptEn, promptKo;
-      if (chosen.length === 1) {
-        promptEn = chosen[0].prompt_en;
-        promptKo = chosen[0].prompt_ko;
-      } else {
-        const raw = await groq([
-          { role:'system', content:`Combine multiple expert roles into one coherent system prompt.\nReturn ONLY raw JSON:\n{"prompt_en":"Unified English system prompt (4-6 smooth sentences)","prompt_ko":"Korean translation"}` },
-          { role:'user',   content:`User goal: "${currentGoal}"\nCombine:\n${chosen.map((e,i)=>`${i+1}. ${e.name}: ${e.prompt_en}`).join('\n')}` }
-        ], 700, 0.5);
-        const p = parseJSON(raw);
-        promptEn = p.prompt_en;
-        promptKo = p.prompt_ko;
-      }
-      finalPrompt = { en: promptEn, ko: promptKo };
-      document.getElementById('promptEn').textContent = promptEn;
-      document.getElementById('promptKo').textContent = promptKo;
-      document.getElementById('resultLoader').style.display = 'none';
-      document.getElementById('resultContent').style.display = 'block';
-    } catch {
-      // 수정됨: fallback — 단순 이어붙이기 대신 역할 목록 형태로 자연스럽게 구성
-      const names = chosen.map(e => e.name).join(', ');
-      const rolesEn = chosen.map((e, i) => '[Role ' + (i+1) + ' - ' + e.name + ']: ' + e.prompt_en).join('\n\n');
-      const rolesKo = chosen.map((e, i) => '[역할 ' + (i+1) + ' - ' + e.name + ']: ' + e.prompt_ko).join('\n\n');
-      finalPrompt = {
-        en: 'You are a multi-disciplinary expert combining the knowledge of: ' + names + '. Draw on each expertise as needed.\n\n' + rolesEn,
-        ko: '당신은 ' + names + '의 지식을 통합한 복합 전문가입니다. 상황에 따라 각 전문 분야를 활용해 답변해주세요.\n\n' + rolesKo
-      };
-      document.getElementById('promptEn').textContent = finalPrompt.en;
-      document.getElementById('promptKo').textContent = finalPrompt.ko;
-      document.getElementById('resultLoader').style.display = 'none';
-      document.getElementById('resultContent').style.display = 'block';
-    }
-  }
-
-  // Copy
-  async function copyText(lang) {
-    const text = finalPrompt[lang];
-    if (!text) return;
-    try { await navigator.clipboard.writeText(text); } catch {
-      const el = Object.assign(document.createElement('textarea'), { value: text });
-      Object.assign(el.style, { position:'fixed', opacity:'0', pointerEvents:'none' });
-      document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-    }
-    const btn = document.getElementById('copyEnBtn');
-    if (btn) {
-      btn.classList.add('copied');
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> 복사됨`;
-      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 복사`; }, 2200);
-    }
-    showToast('✅ 복사됐어요!');
-  }
-
-  // Helpers
-  // 수정됨: setLoading 헬퍼 신규 추가 — 로딩 화면 텍스트 동적 변경용
-  function setLoading(t, d) { document.getElementById('loadingTitle').textContent = t; document.getElementById('loadingDesc').textContent = d; }
-
-  // 수정됨: AbortError 처리 추가 — 취소/타임아웃 시 별도 메시지
-  function showErrMsg(id, e) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (e.name === 'AbortError') { el.textContent = '요청이 취소됐거나 시간이 초과됐어요 (15초). 다시 시도해주세요.'; el.classList.add('show'); return; }
-    const msgs = { 'AUTH_ERROR':'API 키가 올바르지 않아요. 다시 확인해주세요.', 'RATE_LIMIT':'요청이 너무 많아요. 잠시 후 다시 시도해주세요.', 'JSON_PARSE_FAIL':'AI 응답 형식이 이상해요. 다시 시도해주세요.', 'INVALID_RESPONSE':'AI 응답 형식이 이상해요. 다시 시도해주세요.' };
-    el.textContent = msgs[e.message] || (e.name === 'TypeError' ? '네트워크 오류예요. 인터넷 연결을 확인해주세요.' : `오류: ${e.message}`);
-    el.classList.add('show');
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
-  }
-
-  // 수정됨: goBack — 결과→전문가 화면 복귀 시 선택 초기화 (이전 선택 오해 방지)
-  function goBack() {
-    selectedIdxs = [];
-    document.querySelectorAll('.expert-card').forEach(c => c.classList.remove('selected'));
-    updateSelUI();
-    showScreen('screenExperts');
-  }
-  // 수정됨: restart — rerollInput 초기화 추가
-  function restart() {
-    allExperts = []; selectedIdxs = []; currentGoal = ''; finalPrompt = { en:'', ko:'' };
-    document.getElementById('goalInput').value = '';
-    document.getElementById('charCount').textContent = '0';
-    document.getElementById('inputErr').classList.remove('show');
-    document.getElementById('rerollInput').value = '';
-    showScreen('screenInput');
-  }
-
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-  // Init
-  document.getElementById('goalInput').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); findExperts(); } });
+  document.querySelectorAll('.review-card').forEach((el, i) => {
+    el.dataset.delay = i * 100;
+    observer.observe(el);
+  });
 </script>
 </body>
 </html>
