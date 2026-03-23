@@ -1,9 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
+  // 수정됨: GROQ_API_KEY 미설정 시 명확한 에러 반환
+  if (!process.env.GROQ_API_KEY) {
+    return res.status(500).json({ error: { message: 'GROQ_API_KEY가 설정되지 않았습니다.' } });
+  }
+
   const { messages, max_tokens, temperature } = req.body;
 
-  // 수정됨: response.ok 체크 추가 — 4xx/5xx 에러 처리
   let response;
   try {
     response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
