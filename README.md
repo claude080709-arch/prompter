@@ -2,7 +2,7 @@
 
 목표를 입력하면 AI가 최적의 전문가 페르소나를 추천하고, 그 전문가 관점에서 즉시 사용 가능한 프롬프트를 생성해주는 도구.
 
-🔗 **라이브 링크:** [배포 URL 입력]
+🔗 **라이브 링크:** [Prompter](https://prompter-lovat.vercel.app/)
 
 ---
 
@@ -79,4 +79,4 @@ vercel dev
 
 ## 7. 라이브 링크
 
-🔗 [배포 URL 입력]
+🔗 [Prompter](https://prompter-lovat.vercel.app/)
