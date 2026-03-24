@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompter — 전문가 프롬프트 생성기</title><!-- 수정됨: ExpertFlow → Prompter -->
+  <title>Prompter — 전문가 프롬프트 생성기</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -11,59 +11,31 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #080C14;
-      --bg2: #0F1520;
-      --bg3: #161E2E;
-      --border: rgba(255,255,255,0.08);
-      --text: #F0EDE8;
-      --text-muted: rgba(240,237,232,0.45);
-      --accent: #C4962A;
-      --accent-light: #D4A843;
-      --accent-dim: rgba(196,150,42,0.12);
-      --accent2: #00D4FF;
-      --green: #00D97E;
-      --danger: #FF5555;
-      --card-bg: rgba(255,255,255,0.025);
-      --card-hover: rgba(255,255,255,0.05);
-      --radius: 12px;
+      --bg:         #ffffff;
+      --bg2:        #fafafa;
+      --bg3:        #f4f4f4;
+      --border:     #e8e8e8;
+      --text:       #111111;
+      --text-muted: #888888;
+      --accent:     #111111;
+      --green:      #16a34a;
+      --danger:     #dc2626;
+      --card-bg:    #fafafa;
+      --card-hover: #f5f5f5;
+      --radius:     10px;
       --font-display: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: #ffffff;
+      color: #111111;
       font-family: var(--font-body);
       min-height: 100vh;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(196,150,42,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(196,150,42,0.025) 1px, transparent 1px);
-      background-size: 44px 44px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      top: -15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(196,150,42,0.06) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .app {
@@ -90,9 +62,9 @@
       font-weight: 800;
       font-size: 17px;
       letter-spacing: -0.4px;
+      color: #111111;
     }
-    .logo span { color: var(--accent); }
-
+    .logo span { color: #111111; }
 
     main { flex: 1; padding: 52px 0 80px; }
 
@@ -100,7 +72,7 @@
     .screen.active { display: block; animation: fadeUp 0.35s ease; }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -114,20 +86,21 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 13px 16px;
-      color: var(--text);
+      color: #111111;
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       resize: none;
     }
     input[type="text"]:focus,
     input[type="password"]:focus,
     textarea:focus {
-      border-color: rgba(196,150,42,0.5);
-      box-shadow: 0 0 0 3px rgba(196,150,42,0.08);
+      border-color: #111111;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+      background: #ffffff;
     }
-    ::placeholder { color: var(--text-muted); }
+    ::placeholder { color: #bbbbbb; }
 
     /* Buttons */
     .btn {
@@ -135,59 +108,59 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 13px 22px;
+      padding: 12px 20px;
       border-radius: var(--radius);
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       border: none;
       transition: all 0.2s;
       width: 100%;
     }
-    .btn-primary { background: var(--accent); color: #080C14; box-shadow: 0 4px 18px rgba(196,150,42,0.2); }
-    .btn-primary:hover:not(:disabled) { background: var(--accent-light); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(196,150,42,0.3); }
+    .btn-primary { background: #111111; color: #ffffff; }
+    .btn-primary:hover:not(:disabled) { background: #333333; transform: translateY(-1px); }
     .btn-primary:active:not(:disabled) { transform: translateY(0); }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-ghost {
       background: transparent;
-      color: var(--text-muted);
+      color: #888888;
       border: 1px solid var(--border);
       margin-top: 8px;
     }
-    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .btn-ghost:hover { color: #111111; border-color: #cccccc; }
 
     .btn-outline {
       background: transparent;
-      color: var(--text);
+      color: #111111;
       border: 1px solid var(--border);
     }
-    .btn-outline:hover { border-color: rgba(196,150,42,0.4); color: var(--accent); }
+    .btn-outline:hover { border-color: #111111; }
 
     .btn-reroll {
       background: transparent;
-      color: var(--text-muted);
-      border: 1px solid rgba(0,212,255,0.18);
-      font-size: 14px;
-      padding: 11px 18px;
+      color: #888888;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      padding: 10px 16px;
     }
     .btn-reroll:hover:not(:disabled) {
-      border-color: rgba(0,212,255,0.45);
-      color: var(--accent2);
-      background: rgba(0,212,255,0.04);
+      border-color: #111111;
+      color: #111111;
+      background: #f5f5f5;
     }
-    .btn-reroll:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-reroll:disabled { opacity: 0.3; cursor: not-allowed; }
 
     /* Error */
     .err {
       display: none;
-      padding: 13px 15px;
-      background: rgba(255,85,85,0.09);
-      border: 1px solid rgba(255,85,85,0.28);
+      padding: 12px 14px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
       border-radius: var(--radius);
-      color: #FF8888;
-      font-size: 14px;
+      color: #dc2626;
+      font-size: 13px;
       margin-bottom: 14px;
       line-height: 1.5;
     }
@@ -196,77 +169,79 @@
     /* Screen: Input */
     .screen-input .heading {
       font-family: var(--font-display);
-      font-size: clamp(30px, 6vw, 48px);
+      font-size: clamp(26px, 5.5vw, 42px);
       font-weight: 800;
       line-height: 1.12;
       letter-spacing: -1.2px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      color: #111111;
     }
-    .screen-input .heading em { font-style: normal; color: var(--accent); }
-    .screen-input .subtext { color: var(--text-muted); font-size: 16px; margin-bottom: 40px; }
+    .screen-input .heading em { font-style: normal; color: #111111; }
+    .screen-input .subtext { color: #888888; font-size: 14px; margin-bottom: 36px; }
 
-    .goal-textarea { min-height: 130px; font-size: 16px; line-height: 1.65; padding: 16px; }
+    .goal-textarea { min-height: 120px; font-size: 15px; line-height: 1.65; padding: 15px; }
 
     .char-count {
       text-align: right;
-      font-size: 12px;
-      color: var(--text-muted);
+      font-size: 11px;
+      color: #bbbbbb;
       margin-top: 6px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .examples-label {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--text-muted);
+      color: #bbbbbb;
       margin-bottom: 10px;
     }
 
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 32px; }
 
     .chip {
-      padding: 6px 14px;
-      background: var(--bg3);
+      padding: 5px 13px;
+      background: #f5f5f5;
       border: 1px solid var(--border);
       border-radius: 100px;
-      font-size: 13px;
-      color: var(--text-muted);
+      font-size: 12px;
+      color: #888888;
       cursor: pointer;
       transition: all 0.2s;
       user-select: none;
     }
     .chip:hover {
-      border-color: rgba(196,150,42,0.4);
-      color: var(--text);
-      background: rgba(196,150,42,0.06);
+      border-color: #cccccc;
+      color: #111111;
+      background: #f0f0f0;
     }
     .chip.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-dim);
+      border-color: #111111;
+      color: #111111;
+      background: #f0f0f0;
+      font-weight: 500;
     }
 
     /* Screen: Loading */
     .screen-loading { text-align: center; padding: 90px 20px; }
 
-    .dots { display: inline-flex; gap: 8px; margin-bottom: 30px; }
+    .dots { display: inline-flex; gap: 8px; margin-bottom: 28px; }
     .dots span {
-      width: 11px; height: 11px;
+      width: 10px; height: 10px;
       border-radius: 50%;
-      background: var(--accent);
+      background: #111111;
       animation: dotBounce 1.3s ease-in-out infinite;
     }
-    .dots span:nth-child(2) { animation-delay: 0.18s; background: var(--accent-light); }
-    .dots span:nth-child(3) { animation-delay: 0.36s; background: var(--accent2); }
+    .dots span:nth-child(2) { animation-delay: 0.18s; background: #555555; }
+    .dots span:nth-child(3) { animation-delay: 0.36s; background: #aaaaaa; }
 
     @keyframes dotBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-      30%            { transform: translateY(-16px); opacity: 1; }
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30%            { transform: translateY(-14px); opacity: 1; }
     }
 
-    .screen-loading h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-    .screen-loading p  { color: var(--text-muted); font-size: 15px; }
+    .screen-loading h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #111111; }
+    .screen-loading p  { color: #888888; font-size: 14px; }
 
     /* Screen: Experts */
     .step-label {
@@ -274,88 +249,76 @@
       align-items: center;
       gap: 8px;
       font-size: 11px;
-      color: var(--text-muted);
+      color: #aaaaaa;
       text-transform: uppercase;
       letter-spacing: 1.2px;
       margin-bottom: 16px;
     }
-    .step-label::before { content: ''; width: 18px; height: 1px; background: var(--border); }
+    .step-label::before { content: ''; width: 16px; height: 1px; background: var(--border); }
 
     .screen-experts h2 {
       font-family: var(--font-display);
-      font-size: clamp(24px, 4.5vw, 34px);
+      font-size: clamp(22px, 4vw, 30px);
       font-weight: 700;
       letter-spacing: -0.6px;
       line-height: 1.2;
       margin-bottom: 14px;
+      color: #111111;
     }
 
     .goal-tag {
       display: inline-block;
-      padding: 5px 13px;
-      background: rgba(196,150,42,0.09);
-      border: 1px solid rgba(196,150,42,0.22);
+      padding: 4px 12px;
+      background: #f0f0f0;
+      border: 1px solid #e0e0e0;
       border-radius: 100px;
-      font-size: 13px;
-      color: var(--accent);
-      margin-bottom: 32px;
+      font-size: 12px;
+      color: #555555;
+      margin-bottom: 28px;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .expert-grid { display: grid; gap: 12px; }
+    .expert-grid { display: grid; gap: 10px; }
 
     /* Expert Card */
     .expert-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 18px;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s, background 0.2s;
       position: relative;
-      overflow: hidden;
     }
-    .expert-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(196,150,42,0.07) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-    }
-    .expert-card:hover { border-color: rgba(196,150,42,0.35); background: var(--card-hover); }
-    .expert-card:hover::after { opacity: 1; }
+    .expert-card:hover { border-color: #cccccc; background: var(--card-hover); }
     .expert-card.selected {
-      border-color: var(--accent);
-      background: rgba(196,150,42,0.05);
-      box-shadow: 0 0 0 2px rgba(196,150,42,0.18), 0 8px 28px rgba(196,150,42,0.12);
+      border-color: #111111;
+      background: #f8f8f8;
     }
-    .expert-card.selected::after { opacity: 1; }
 
     .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
 
     .card-num {
-      width: 28px; height: 28px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      color: var(--text-muted);
+      color: #aaaaaa;
       transition: all 0.2s;
       flex-shrink: 0;
     }
-    .expert-card.selected .card-num { background: var(--accent); border-color: var(--accent); color: #080C14; }
+    .expert-card.selected .card-num { background: #111111; border-color: #111111; color: #ffffff; }
 
     .card-check {
-      width: 22px; height: 22px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       border: 1.5px solid var(--border);
       display: flex;
@@ -364,21 +327,21 @@
       transition: all 0.2s;
       flex-shrink: 0;
     }
-    .expert-card.selected .card-check { background: var(--accent); border-color: var(--accent); }
+    .expert-card.selected .card-check { background: #111111; border-color: #111111; }
     .card-check .check-icon { display: none; }
     .expert-card.selected .card-check .check-icon { display: block; }
 
-    .expert-name { font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
-    .expert-tagline { font-size: 13px; color: var(--accent2); margin-bottom: 14px; }
-    .benefits-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--text-muted); margin-bottom: 7px; }
-    .expert-benefits { font-size: 14px; color: rgba(240,237,232,0.65); line-height: 1.65; }
+    .expert-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; color: #111111; }
+    .expert-tagline { font-size: 12px; color: #888888; margin-bottom: 12px; }
+    .benefits-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.9px; color: #bbbbbb; margin-bottom: 6px; }
+    .expert-benefits { font-size: 13px; color: #666666; line-height: 1.65; }
 
     /* Reroll Section */
     .reroll-section {
-      margin-top: 32px;
-      padding: 22px;
-      background: rgba(0,212,255,0.02);
-      border: 1px solid rgba(0,212,255,0.1);
+      margin-top: 28px;
+      padding: 20px;
+      background: #fafafa;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
     }
 
@@ -386,41 +349,39 @@
       display: flex;
       align-items: center;
       gap: 7px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
-      color: var(--text);
+      color: #111111;
       margin-bottom: 5px;
     }
-    .reroll-title svg { color: var(--accent2); flex-shrink: 0; }
+    .reroll-title svg { color: #888888; flex-shrink: 0; }
 
     .reroll-desc {
       font-size: 12px;
-      color: rgba(240,237,232,0.3);
+      color: #aaaaaa;
       margin-bottom: 14px;
       line-height: 1.55;
     }
 
     .reroll-textarea {
-      min-height: 80px;
-      font-size: 14px;
+      min-height: 76px;
+      font-size: 13px;
       line-height: 1.6;
-      padding: 13px 15px;
-      margin-bottom: 12px;
-      border-color: rgba(0,212,255,0.12);
+      padding: 12px 14px;
+      margin-bottom: 10px;
     }
-    .reroll-textarea:focus { border-color: rgba(0,212,255,0.4); }
 
     /* Action Bar */
     .action-bar {
       position: sticky;
       bottom: 0;
       padding: 20px 0 28px;
-      background: linear-gradient(to top, var(--bg) 55%, transparent 100%);
+      background: linear-gradient(to top, #ffffff 55%, transparent 100%);
       margin-top: 20px;
     }
 
-    .sel-count { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 11px; }
-    .sel-count strong { color: var(--accent); }
+    .sel-count { text-align: center; font-size: 12px; color: #aaaaaa; margin-top: 10px; }
+    .sel-count strong { color: #111111; }
 
     /* Screen: Result */
     .back-link {
@@ -429,38 +390,38 @@
       gap: 6px;
       background: none;
       border: none;
-      color: var(--text-muted);
-      font-size: 14px;
+      color: #888888;
+      font-size: 13px;
       font-family: var(--font-body);
       cursor: pointer;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       transition: color 0.2s;
       padding: 0;
     }
-    .back-link:hover { color: var(--text); }
+    .back-link:hover { color: #111111; }
 
-    .screen-result h2 { font-family: var(--font-display); font-size: clamp(24px, 4.5vw, 34px); font-weight: 700; letter-spacing: -0.6px; margin-bottom: 8px; }
-    .screen-result .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+    .screen-result h2 { font-family: var(--font-display); font-size: clamp(22px, 4vw, 30px); font-weight: 700; letter-spacing: -0.6px; margin-bottom: 8px; color: #111111; }
+    .screen-result .subtitle { color: #888888; font-size: 13px; margin-bottom: 22px; }
 
-    .expert-badges { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 28px; }
+    .expert-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
     .ebadge {
-      padding: 4px 11px;
-      background: rgba(196,150,42,0.1);
-      border: 1px solid rgba(196,150,42,0.24);
+      padding: 3px 10px;
+      background: #f0f0f0;
+      border: 1px solid #e0e0e0;
       border-radius: 100px;
-      font-size: 12px;
-      color: var(--accent);
+      font-size: 11px;
+      color: #555555;
     }
 
     .result-loader { text-align: center; padding: 60px 20px; }
-    .result-loader p { color: var(--text-muted); font-size: 14px; margin-top: 16px; }
+    .result-loader p { color: #888888; font-size: 13px; margin-top: 16px; }
 
     .prompt-block {
-      background: var(--bg2);
+      background: #fafafa;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       position: relative;
     }
     .prompt-block::before {
@@ -468,7 +429,7 @@
       position: absolute;
       left: 0; top: 0; bottom: 0;
       width: 3px;
-      background: linear-gradient(to bottom, var(--accent), rgba(196,150,42,0.2));
+      background: #111111;
       border-radius: 3px 0 0 3px;
     }
 
@@ -476,36 +437,36 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 11px 16px;
+      padding: 10px 15px;
       border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
+      background: #f5f5f5;
     }
 
-    .block-label { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
+    .block-label { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #888888; }
 
-    .lang-pill { padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 700; }
-    .lang-pill.en { background: rgba(0,212,255,0.13); color: var(--accent2); }
-    .lang-pill.ko { background: rgba(196,150,42,0.13); color: var(--accent); }
+    .lang-pill { padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+    .lang-pill.en { background: #e8e8e8; color: #555555; }
+    .lang-pill.ko { background: #e8e8e8; color: #555555; }
 
     .copy-btn {
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 6px 11px;
-      background: var(--bg3);
+      padding: 5px 10px;
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text-muted);
-      font-size: 12px;
+      border-radius: 6px;
+      color: #888888;
+      font-size: 11px;
       font-family: var(--font-body);
       cursor: pointer;
       transition: all 0.2s;
     }
-    .copy-btn:hover { border-color: rgba(196,150,42,0.4); color: var(--accent); }
-    .copy-btn.copied { border-color: rgba(0,217,126,0.5); color: var(--green); }
+    .copy-btn:hover { border-color: #111111; color: #111111; }
+    .copy-btn.copied { border-color: #16a34a; color: #16a34a; }
 
-    .prompt-text { padding: 18px 20px; font-size: 14.5px; line-height: 1.8; color: rgba(240,237,232,0.82); white-space: pre-wrap; word-break: break-word; }
-    .prompt-text.ko { font-size: 13.5px; color: var(--text-muted); font-style: italic; }
+    .prompt-text { padding: 16px 18px; font-size: 13.5px; line-height: 1.8; color: #333333; white-space: pre-wrap; word-break: break-word; }
+    .prompt-text.ko { font-size: 13px; color: #888888; font-style: italic; }
 
     .result-actions { display: flex; gap: 10px; margin-top: 8px; }
 
@@ -515,11 +476,11 @@
       bottom: 28px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: var(--green);
-      color: #080C14;
-      font-size: 14px;
+      background: #111111;
+      color: #ffffff;
+      font-size: 13px;
       font-weight: 600;
-      padding: 11px 22px;
+      padding: 10px 20px;
       border-radius: 100px;
       z-index: 300;
       opacity: 0;
@@ -537,9 +498,9 @@
       .result-actions { flex-direction: column; }
     }
 
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -576,7 +537,7 @@
         <div class="chip" onclick="pickExample(this)">글쓰기 실력을 키우고 싶어</div>
       </div>
       <button class="btn btn-primary" onclick="findExperts()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
         전문가 찾기
@@ -588,7 +549,6 @@
       <div class="dots"><span></span><span></span><span></span></div>
       <h2 id="loadingTitle">최적의 전문가를 찾는 중...</h2>
       <p id="loadingDesc">AI가 당신의 목표를 분석하고 있어요</p>
-      <!-- 수정됨: 취소 버튼 추가 — 무한 로딩 방지 -->
       <button class="btn btn-ghost" id="cancelLoadBtn" onclick="cancelLoading()" style="max-width:180px; margin: 28px auto 0;">취소</button>
     </div>
 
@@ -597,13 +557,13 @@
       <div class="step-label">전문가 선택</div>
       <h2>당신에게 필요한<br>전문가들이에요</h2>
       <div class="goal-tag" id="goalTag"></div>
+
       <div class="expert-grid" id="expertGrid"></div>
 
       <!-- Reroll Section -->
-      <!-- 수정됨: 리롤 섹션 추가 -->
       <div class="reroll-section">
         <div class="reroll-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
           </svg>
@@ -617,7 +577,7 @@
           maxlength="300"
         ></textarea>
         <button class="btn btn-reroll" id="rerollBtn" onclick="rerollExperts()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
           </svg>
@@ -636,7 +596,7 @@
     <!-- Screen 4: Result -->
     <div class="screen screen-result" id="screenResult">
       <button class="back-link" onclick="goBack()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="m15 18-6-6 6-6"/>
         </svg>
         다시 선택
@@ -658,7 +618,7 @@
           <div class="block-header">
             <div class="block-label"><span class="lang-pill en">EN</span>영어 프롬프트</div>
             <button class="copy-btn" id="copyEnBtn" onclick="copyText('en')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
               복사
@@ -676,7 +636,7 @@
 
         <div class="result-actions">
           <button class="btn btn-primary" style="flex:1" onclick="copyText('en')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
             </svg>
             프롬프트 복사
@@ -691,7 +651,6 @@
 
 <script>
   'use strict';
-
 
   let allExperts   = [];
   let selectedIdxs = [];
@@ -826,9 +785,6 @@ Rules:
 
     // 수정됨: 리롤 시 선택했던 전문가 이름도 컨텍스트로 전달
     const prevSelected = selectedIdxs.map(i => allExperts[i]?.name).filter(Boolean);
-    const selectedInfo = prevSelected.length
-      ? `사용자가 마음에 들었던 전문가: ${prevSelected.join(', ')}`
-      : '사용자가 선택한 전문가 없음';
 
     // 수정됨: XSS 방지 — 사용자 입력값 프롬프트 삽입 전 sanitize
     const safeGoal     = currentGoal.replace(/"/g, '\\"').replace(/`/g, "'");
@@ -855,10 +811,10 @@ ${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelec
       renderExperts();
       showScreen('screenExperts');
       document.getElementById('rerollInput').value = ''; // 수정됨: 리롤 성공 후 입력창 초기화
-      showToast('🔄 새로운 전문가로 업데이트됐어요!');
+      showToast('새로운 전문가로 업데이트됐어요');
     } catch {
       showScreen('screenExperts');
-      showToast('❌ 다시 시도해주세요');
+      showToast('다시 시도해주세요');
     } finally {
       btn.disabled = false;
     }
@@ -867,17 +823,17 @@ ${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelec
   // Render
   // 수정됨: 한자 slip-through 방어 — 렌더 전 한자 제거 후처리
   function stripHanja(str) {
-    return str.replace(/[㐀-鿿豈-﫿]/g, '').trim();
+    return str.replace(/[㐀-鿿豈-﫿]/g, '').trim();
   }
 
   function renderExperts() {
-    document.getElementById('goalTag').textContent = `"${currentGoal}"`; 
+    document.getElementById('goalTag').textContent = `"${currentGoal}"`;
     document.getElementById('expertGrid').innerHTML = allExperts.map((ex, i) => `
       <div class="expert-card" id="card-${i}" onclick="toggleExpert(${i})">
         <div class="card-top">
           <div class="card-num">${i + 1}</div>
           <div class="card-check">
-            <svg class="check-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#080C14" stroke-width="3.5">
+            <svg class="check-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
@@ -976,10 +932,10 @@ ${prevSelected.length ? `사용자가 마음에 들었던 전문가: ${safeSelec
     const btn = document.getElementById('copyEnBtn');
     if (btn) {
       btn.classList.add('copied');
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> 복사됨`;
-      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 복사`; }, 2200);
+      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> 복사됨`;
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 복사`; }, 2200);
     }
-    showToast('✅ 복사됐어요!');
+    showToast('복사됐어요!');
   }
 
   // Helpers
