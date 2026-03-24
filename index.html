@@ -206,7 +206,7 @@
     }
 
     /* ─── FEATURES ─── */
-    .features { padding: 100px 0; }
+    .features { padding: 80px 0; }
 
     .section-label {
       display: flex;
@@ -242,7 +242,7 @@
       text-align: center;
       color: var(--text-muted);
       font-size: 16px;
-      margin-bottom: 64px;
+      margin-bottom: 48px;
     }
 
     .features-grid {
@@ -256,16 +256,32 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 28px 24px;
-      transition: border-color 0.3s, transform 0.3s;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
       opacity: 0;
       transform: translateY(24px);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(196,150,42,0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
     .feature-card.visible {
       opacity: 1;
       transform: translateY(0);
-      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
     }
-    .feature-card:hover { border-color: rgba(196,150,42,0.3); transform: translateY(-3px); }
+    .feature-card:hover {
+      border-color: rgba(196,150,42,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .feature-card:hover::after { opacity: 1; }
 
     .feature-icon {
       width: 44px; height: 44px;
@@ -294,7 +310,7 @@
     }
 
     /* ─── HOW TO ─── */
-    .howto { padding: 100px 0; background: linear-gradient(to bottom, transparent, rgba(196,150,42,0.02), transparent); }
+    .howto { padding: 80px 0; background: linear-gradient(to bottom, transparent, rgba(196,150,42,0.025), transparent); }
 
     .steps {
       display: flex;
@@ -367,7 +383,7 @@
     }
 
     /* ─── REVIEWS ─── */
-    .reviews { padding: 100px 0; }
+    .reviews { padding: 80px 0; }
 
     .reviews-grid {
       display: grid;
@@ -379,9 +395,23 @@
       background: linear-gradient(135deg, rgba(255,255,255,0.022) 0%, rgba(255,255,255,0.008) 100%);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 28px 24px 24px;
       opacity: 0;
       transform: translateY(20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .review-card::before {
+      content: '"';
+      position: absolute;
+      top: -8px;
+      left: 16px;
+      font-family: Georgia, serif;
+      font-size: 72px;
+      color: rgba(196,150,42,0.1);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
     }
     .review-card.visible {
       opacity: 1;
@@ -427,7 +457,7 @@
 
     /* ─── CTA ─── */
     .cta-section {
-      padding: 120px 0 140px;
+      padding: 100px 0 120px;
       text-align: center;
     }
 
@@ -520,6 +550,154 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+    /* ─── TRUST BAR ─── */
+    .trust-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .trust-item svg { opacity: 0.6; }
+    .trust-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    /* ─── HERO DEMO MOCKUP ─── */
+    .hero-demo {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .demo-step {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-align: left;
+    }
+
+    .demo-step-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .demo-input-text {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .demo-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+    }
+
+    .demo-vline {
+      width: 1px;
+      height: 12px;
+      background: linear-gradient(to bottom, rgba(196,150,42,0.4), rgba(196,150,42,0.1));
+    }
+
+    .demo-badge-ai {
+      padding: 3px 10px;
+      background: rgba(196,150,42,0.1);
+      border: 1px solid rgba(196,150,42,0.2);
+      border-radius: 100px;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+    }
+
+    .demo-cards {
+      display: flex;
+      gap: 8px;
+    }
+
+    .demo-card {
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .demo-card-selected {
+      border-color: var(--accent);
+      background: rgba(196,150,42,0.1);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .demo-prompt-text {
+      font-size: 13px;
+      color: rgba(237,233,227,0.55);
+      line-height: 1.6;
+      margin-bottom: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .demo-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      background: var(--accent);
+      color: #080C14;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .demo-lang-en {
+      display: inline-block;
+      padding: 1px 6px;
+      background: rgba(0,212,255,0.13);
+      color: var(--accent2);
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .demo-step-result {
+      border-color: rgba(196,150,42,0.2);
+    }
+
+    @media (max-width: 480px) {
+      .hero-demo { display: none; }
+      .trust-bar { gap: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -547,6 +725,64 @@
         무료로 시작하기
       </a>
     </div>
+
+    <!-- 신뢰 지표 -->
+    <div class="trust-bar">
+      <span class="trust-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Groq API 기반
+      </span>
+      <span class="trust-dot"></span>
+      <span class="trust-item">완전 무료</span>
+      <span class="trust-dot"></span>
+      <span class="trust-item">회원가입 없음</span>
+      <span class="trust-dot"></span>
+      <span class="trust-item">설치 불필요</span>
+    </div>
+
+    <!-- 앱 미리보기 mockup -->
+    <div class="hero-demo" aria-hidden="true">
+      <div class="demo-step demo-step-input">
+        <div class="demo-step-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          목표 입력
+        </div>
+        <div class="demo-input-text">"3개월 안에 10kg 빼고 싶어"</div>
+      </div>
+      <div class="demo-connector">
+        <div class="demo-vline"></div>
+        <div class="demo-badge-ai">AI 분석 중</div>
+        <div class="demo-vline"></div>
+      </div>
+      <div class="demo-step demo-step-experts">
+        <div class="demo-step-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          전문가 추천
+        </div>
+        <div class="demo-cards">
+          <div class="demo-card">다이어트</div>
+          <div class="demo-card demo-card-selected">운동 ✓</div>
+          <div class="demo-card">생활</div>
+        </div>
+      </div>
+      <div class="demo-connector">
+        <div class="demo-vline"></div>
+        <div class="demo-badge-ai">프롬프트 생성</div>
+        <div class="demo-vline"></div>
+      </div>
+      <div class="demo-step demo-step-result">
+        <div class="demo-step-label">
+          <span class="demo-lang-en">EN</span>
+          프롬프트 완성
+        </div>
+        <div class="demo-prompt-text">You are a certified fitness trainer who specializes in weight loss...</div>
+        <div class="demo-copy-btn">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          복사하기
+        </div>
+      </div>
+    </div>
+
     <div class="hero-scroll">
       <div class="scroll-line"></div>
       scroll
